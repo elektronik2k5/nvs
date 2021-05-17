@@ -69,6 +69,10 @@ nvs() {
 		if [ "${NVS_OS}" = "darwin" ] && [ "${NODE_ARCH}" = "arm64" ]; then
 			NODE_ARCH="x64"
 		fi
+		# Detect musl
+		if [ "${NVS_OS}" = "linux" ] && ldd --version 2>&1 >/dev/null | grep musl; then
+			NODE_ARCH="$NODE_ARCH-musl"
+		fi
 		local NODE_FULLNAME="node-v${NODE_VERSION}-${NVS_OS}-${NODE_ARCH}"
 		local NODE_URI="${NODE_BASE_URI}v${NODE_VERSION}/${NODE_FULLNAME}${NODE_ARCHIVE_EXT}"
 		local NODE_ARCHIVE="${NVS_HOME}/cache/${NODE_FULLNAME}${NODE_ARCHIVE_EXT}"
@@ -178,7 +182,7 @@ nvsudo() {
 }
 
 # export our functions so that subshells and scripts can use them
-case "$(ps -p $$)" in
+case "$(ps -o pid,tty,time,comm | grep $$)" in
 	*bash*)
 		export -f nvs nvsudo
 		;;

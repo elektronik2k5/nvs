@@ -1,17 +1,39 @@
 # REMOTE Command - Node Version Switcher
 
-    nvs remote
-    nvs remote ls
+A remote is a URI which contains an `index.json` file which describes the available node versions. Examples:
 
-    nvs remote <name>
+- Node [official](https://nodejs.org/dist/) remote, which is the default in NVS
+- Node [unofficial builds](https://unofficial-builds.nodejs.org/download/release/) remote
 
-    nvs remote <name> <uri>
-    nvs remote add <name> <uri>
+```shell
+# List remotes
+nvs remote
+nvs remote ls
 
-    nvs remote -d <name>
-    nvs remote rm <name>
+# Show remote URI
+nvs remote <name>
 
-Queries, sets, or removes URIs for downloading node. When no arguments are specified, all remote names and URIs are listed. When just a name is specified, the URI for that remote is shown, if it exists. When a name and value are specified (optionally with an `add` command), the remote is added or updated to the persisted list. The `-d` or `rm` command removes an item.
+# Add/set and persist remote
+nvs remote <name> <uri>
+nvs remote add <name> <uri>
+
+# Remove remote
+nvs remote -d <name>
+nvs remote rm <name>
+```
+
+`nvs remote` queries, sets, or removes URIs for downloading node. When no arguments are specified, all remote names and URIs are listed. When just a name is specified, the URI for that remote is shown, if it exists. When a name and value are specified (optionally with an `add` command), the remote is added or updated to the persisted list. The `-d` or `rm` command removes an item.
+
+## Example
+
+```shell
+# Add remote called `unofficial` of unofficial node builds:
+nvs remote add unofficial https://unofficial-builds.nodejs.org/download/release/
+# Install from added remote
+nvs add "unofficial/14.17.0"
+# Install a more exotic version
+nvs add "unofficial/14.17.0/x64-musl"
+```
 
 A special `default` remote may also be set to refer to the name of another remote. A remote that is pointed to by the default may not be removed; switch the default to another remote first. The default remote is implied when a version string does not specify a remote. For example, `nvs add 6` is equivalent to `nvs add node/6` if `node` is the default remote.
 
